@@ -16,7 +16,7 @@ VERSION=${1:-$DEFAULT_VERSION}
 # 容器配置
 CONTAINER_NAME="service-b"
 IMAGE_NAME="kkk2099/kkk"
-SERVICE_NAME="service-b"
+TAG_NAME="service-b-1.0"
 PORT="10002"
 
 # 检查并移除已存在的容器
@@ -27,13 +27,13 @@ if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
 fi
 
 # 运行新容器
-echo "Starting $SERVICE_NAME..."
+echo "Starting $IMAGE_NAME:$TAG_NAME..."
 echo "Version: $VERSION"
 
 docker run -d \
    -p $PORT:$PORT \
    -e APP_VERSION=$VERSION \
    --name $CONTAINER_NAME \
-   $IMAGE_NAME:$SERVICE_NAME-$VERSION
+   $IMAGE_NAME:$TAG_NAME
 
 echo "Container started. Use 'docker logs $CONTAINER_NAME' to view logs."
