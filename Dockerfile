@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 29001
+EXPOSE 10002
 
 # 设置环境变量
 ENV FLASK_APP=app.py
