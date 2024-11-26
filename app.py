@@ -60,9 +60,22 @@ def set_sleep_time():
 import uuid
 
 
-def generate_span_id():
-    """生成16位的span id"""
-    return uuid.uuid4().hex[:16]
+def get_span_id(request):
+    """获取或生成span id"""
+    is_kubernetes = os.getenv('APP_KUBERNETES_ENABLED', 'false').lower() == 'true'
+
+    if is_kubernetes:
+        span_id = request.headers.get('X-B3-SpanId')
+        if span_id:
+            app.logger.debug("Using Istio generated spanId: %s", span_id)
+            return span_id
+        else:
+            app.logger.warning("No spanId found in k8s environment")
+            return ""
+    else:
+        new_span_id = "service-b-" + uuid.uuid4().hex[:16]
+        app.logger.debug("Generated new spanId in non-k8s environment: %s", new_span_id)
+        return new_span_id
 
 
 @app.route('/api/cost', methods=['GET'])
@@ -72,7 +85,7 @@ def cost():
     # 从请求头中的 X-B3-SpanId 作为 parentSpanId
     parent_span_id = request.headers.get('X-B3-SpanId', '')
     # 为当前服务生成新的 spanId
-    span_id = "service-b-" + generate_span_id()
+    span_id = get_span_id(request)
 
     start_time = int(time.time() * 1000)
 
