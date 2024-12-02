@@ -80,23 +80,31 @@ def get_span_id(request):
 
 @app.route('/api/cost', methods=['GET'])
 def cost():
+    # 打印所有请求头
+    print("\n=== All Request Headers ===")
+    for header_name, header_value in request.headers:
+        print(f"{header_name}: {header_value}")
+
+    # 特别打印 baggage 相关信息
+    print("\n=== Baggage Header ===")
+    print(f"baggage: {request.headers.get('baggage', 'Not Found')}")
+
     # 获取 B3 headers
     trace_id = request.headers.get('X-B3-TraceId', '')
-    # 从请求头中的 X-B3-SpanId 作为 parentSpanId
     parent_span_id = request.headers.get('X-B3-SpanId', '')
-    # 为当前服务生成新的 spanId
     span_id = get_span_id(request)
 
     start_time = int(time.time() * 1000)
-
     time.sleep(Config.SLEEP_TIME)
-
     end_time = int(time.time() * 1000)
+
+    # 包含完整请求头信息在 trace_info 中
+    headers_dict = dict(request.headers)
 
     trace_info = {
         "traceId": trace_id,
-        "spanId": span_id,  # 使用新生成的spanId
-        "parentSpanId": parent_span_id,  # 使用请求中的X-B3-SpanId作为parentSpanId
+        "spanId": span_id,
+        "parentSpanId": parent_span_id,
         "serviceName": "serviceB",
         "version": APP_VERSION,
         "startTime": start_time,
@@ -115,7 +123,6 @@ def cost():
         "trace_info": trace_info
     })
 
-    # 在响应头中设置新的spanId，以便下游服务使用
     response.headers['X-B3-TraceId'] = trace_id
     response.headers['X-B3-SpanId'] = span_id
     response.headers['X-B3-ParentSpanId'] = parent_span_id
