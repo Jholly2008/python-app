@@ -2,6 +2,7 @@ import time
 import os
 
 from flask import Flask, request, jsonify
+from instagram_handler import setup_instagram_routes
 
 app = Flask(__name__)
 
@@ -112,6 +113,9 @@ def cost():
 def test():
     return jsonify({'message': 'Test successful'}), 200
 
+
+# 注册Instagram相关路由
+setup_instagram_routes(app)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10002)
