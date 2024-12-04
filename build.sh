@@ -61,3 +61,23 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Docker镜像构建成功: $DOCKER_IMAGE_NAME"
+
+# 询问是否要推送到DockerHub
+read -p "是否要推送镜像到DockerHub？(y/n): " PUSH_CHOICE
+
+if [ "$PUSH_CHOICE" = "y" ] || [ "$PUSH_CHOICE" = "Y" ]; then
+    echo "正在推送镜像到DockerHub..."
+    docker push "$DOCKER_IMAGE_NAME"
+
+    # 检查推送是否成功
+    if [ $? -ne 0 ]; then
+        echo "推送到DockerHub失败。"
+        exit 1
+    else
+        echo "推送到DockerHub成功。"
+    fi
+else
+    echo "跳过推送到DockerHub。"
+fi
+
+echo "脚本执行完成。"
