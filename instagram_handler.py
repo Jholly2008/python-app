@@ -49,7 +49,7 @@ def setup_instagram_routes(app):
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
-    @app.route('/get_media_urls', methods=['GET'])
+    @app.route('/get_media_urls', methods=['POST'])
     def get_media_urls():
         if not check_authorization():
             return jsonify({'errcode': 1, 'errmsg': 'Unauthorized'}), 401
