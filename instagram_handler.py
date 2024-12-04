@@ -11,7 +11,8 @@ loader = instaloader.Instaloader(
 )
 USER = "kkkggg3001"
 PASSWORD = "13579@Kxj"
-loader.login(USER, PASSWORD)
+loader.interactive_login(USER)
+print(f"Logged in successfully as {USER}")
 
 # TODO 暂时授权Token是一个固定的字符串
 AUTH_TOKEN = "YourSecretTokenWithKong"
