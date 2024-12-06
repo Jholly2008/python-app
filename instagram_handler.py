@@ -64,14 +64,27 @@ def setup_instagram_routes(app):
         try:
             post = instaloader.Post.from_shortcode(loader.context, shortcode)
 
-            # 获取图片和视频的URL
-            image_url = post.url if post.url else None
-            video_url = post.video_url if post.is_video else None
+            images = []
+            videos = []
+
+            if post.typename == 'GraphSidecar':
+                # Handle multiple media items
+                for node in post.get_sidecar_nodes():
+                    if node.is_video:
+                        videos.append(node.video_url)
+                    else:
+                        images.append(node.display_url)
+            else:
+                # Handle single media item
+                if post.is_video:
+                    videos.append(post.video_url)
+                elif post.url:
+                    images.append(post.url)
 
             response_data = {
                 "errcode": 0,
-                "images": [image_url] if image_url else [],
-                "videos": [video_url] if video_url else []
+                "images": images,
+                "videos": videos
             }
 
             return jsonify(response_data), 200
