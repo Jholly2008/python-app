@@ -1,1 +1,2 @@
 Flask
+redis>=4.5.1
