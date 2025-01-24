@@ -31,6 +31,10 @@ if exist "requirements.txt" (
     )
 )
 
+
+:: 基于Firefox初始化cookie文件
+:: python 615_import_firefox_session.py
+
 :: 启动应用
 echo Starting application...
 python app.py

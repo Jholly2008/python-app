@@ -2,16 +2,15 @@ import instaloader
 from flask import request, jsonify
 
 # 初始化Instaloader
-loader = instaloader.Instaloader(
-    download_comments=False,
-    download_geotags=False,
-    download_pictures=False,
-    download_video_thumbnails=False,
-    save_metadata=False
-)
-USER = "kkkggg3001"
-PASSWORD = "13579@Kxj"
-loader.login(USER, PASSWORD)
+loader = instaloader.Instaloader()
+
+USER = "kkkggg9001"
+PASSWORD = "13579@insKkk3"
+#loader.login(USER, PASSWORD)
+loader.load_session_from_file(USER)
+#loader.interactive_login(USER)
+
+
 print(f"Logged in successfully as {USER}")
 
 # TODO 暂时授权Token是一个固定的字符串
